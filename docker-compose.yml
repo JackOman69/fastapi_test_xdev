@@ -1,0 +1,30 @@
+services:
+  fastapi-app:
+    restart: always
+    build:
+      context: .
+      target: fastapi-app
+    depends_on:
+      - db
+    env_file:
+      - .env
+    container_name: fastapi-app
+    volumes:
+      - /containers/fastapi-app/logs:/app/logs
+      - .:/app
+    ports:
+      - "8010:8010"
+
+  db:
+    restart: always
+    image: postgis/postgis:14-3.3
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: KdsooeFDSusd82fs
+      POSTGRES_DB: db
+    volumes:
+        - /containers/postgres_xdev_data:/var/lib/postgresql/data
+        - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "8005:5432"
